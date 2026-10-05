@@ -1,0 +1,5 @@
+# Do not push API keys
+.Renviron
+
+# Do not push data
+data/
