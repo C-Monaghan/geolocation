@@ -4,14 +4,27 @@ get_coords_from_place_id <- function(place_id, key) {
   # Use the Place Details (NEW) API endpoint
   url <- paste0("https://places.googleapis.com/v1/places/", place_id)
 
-  # Make a request
-  req <- httr2::request(url) |>
-    httr2::req_url_query(key = key) |>
-    httr2::req_headers(`X-Goog-FieldMask` = "location") |>
-    httr2::req_perform()
+  # Make an API request (return an error if it doesn't work)
+  req <- tryCatch(
+    {
+      httr2::request(url) |>
+        httr2::req_url_query(key = key) |>
+        httr2::req_headers(`X-Goog-FieldMask` = "location") |>
+        httr2::req_perform()
+    },
+    error = function(e) {
+      message("Request fail: ", conditionMessage(e))
+
+      return(NULL)
+    }
+  )
 
   # What is the content of the request (ideally lat and lon data)
-  content <- httr2::resp_body_json(req)
+  if (!is.null(req)) {
+    content <- httr2::resp_body_json(req)
+  } else {
+    content <- NULL
+  }
 
   # Store the lat and lon data in a tibble if present (NULL response if not)
   if (!is.null(content$location)) {
