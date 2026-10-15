@@ -1,6 +1,8 @@
 # Function ---------------------------------------------------------------------
 # Get lat/lon from place ID
 get_coords_from_place_id <- function(place_id, key) {
+  Sys.sleep(0.12) # 500 requests a minute (SLOW DOWN!!)
+
   # Use the Place Details (NEW) API endpoint
   url <- paste0("https://places.googleapis.com/v1/places/", place_id)
 

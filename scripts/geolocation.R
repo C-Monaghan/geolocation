@@ -19,7 +19,7 @@ import_data <- paste0("dataset_", number, ".rds")
 places <- readRDS(here::here("data/split/", import_data)) |> pull(place_ID)
 
 # Geocode the place IDs --------------------------------------------------------
-geo_codes <- pblapply(places, function(road_id) {
+geo_codes <- pblapply(places[1:10], function(road_id) {
   get_coords_from_place_id(place_id = road_id, key = api_key)
 }) |>
   bind_rows()
